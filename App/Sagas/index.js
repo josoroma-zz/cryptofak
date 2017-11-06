@@ -6,14 +6,14 @@ import DebugConfig from '../Config/DebugConfig'
 /* ------------- Types ------------- */
 
 import { StartupTypes } from '../Redux/StartupRedux'
-import { GithubTypes } from '../Redux/GithubRedux'
+import { CoindeskTypes } from '../Redux/CoindeskRedux'
 import { LoginTypes } from '../Redux/LoginRedux'
 
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
 import { login } from './LoginSagas'
-import { getUserAvatar } from './GithubSagas'
+import { getCurrentPrice } from './CoindeskSagas'
 
 /* ------------- API ------------- */
 
@@ -30,6 +30,6 @@ export default function * root () {
     takeLatest(LoginTypes.LOGIN_REQUEST, login),
 
     // some sagas receive extra parameters in addition to an action
-    takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api)
+    takeLatest(CoindeskTypes.COINDESK_REQUEST, getCurrentPrice, api)
   ])
 }

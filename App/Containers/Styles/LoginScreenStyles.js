@@ -6,9 +6,14 @@ export default StyleSheet.create({
     paddingTop: 70,
     backgroundColor: Colors.background
   },
+  bitcoin: {
+    margin: Metrics.baseMargin + 10,
+    borderRadius: 4
+  },
   form: {
     backgroundColor: Colors.snow,
-    margin: Metrics.baseMargin,
+    margin: Metrics.baseMargin + 10,
+    marginTop: 0,
     borderRadius: 4
   },
   row: {

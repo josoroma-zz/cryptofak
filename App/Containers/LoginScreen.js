@@ -4,13 +4,32 @@ import { connect } from "react-redux";
 import Styles from "./Styles/LoginScreenStyles";
 import { Images, Metrics } from "../Themes";
 import LoginActions from "../Redux/LoginRedux";
-import { Button, Text as NBText, Contant, Form, Item, Input, Label } from "native-base";
+import {
+  Button,
+  Text as NBText,
+  Contant,
+  Form,
+  Item,
+  Input,
+  Label,
+  // CARD-ON-TOP
+  Container,
+  Header,
+  Content,
+  Card,
+  CardItem,
+  Thumbnail,
+  Left,
+  Body
+} from "native-base";
+import IconZocial from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class LoginScreen extends React.Component {
 	static propTypes = {
 		dispatch: PropTypes.func,
 		fetching: PropTypes.bool,
-		attemptLogin: PropTypes.func,
+    attemptLogin: PropTypes.func,
+    coindesk: PropTypes.object,
 	};
 
 	isAttempting = false;
@@ -20,8 +39,8 @@ class LoginScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			username: "reactnative@infinite.red",
-			password: "password",
+			username: "admin@josoroma.poc",
+			password: "admin",
 			visibleHeight: Metrics.screenHeight,
 			topLogo: { width: Metrics.screenWidth - 40 },
 		};
@@ -85,20 +104,38 @@ class LoginScreen extends React.Component {
 
 	render() {
 		const { username, password } = this.state;
-		const { fetching } = this.props;
+		const { fetching, coindesk } = this.props;
 		const editable = !fetching;
-		const textInputStyle = editable ? Styles.textInput : Styles.textInputReadonly;
+    const textInputStyle = editable ? Styles.textInput : Styles.textInputReadonly;
+
 		return (
 			<ScrollView
 				contentContainerStyle={{ justifyContent: "center" }}
 				style={[Styles.container, { height: this.state.visibleHeight }]}
 				keyboardShouldPersistTaps="always"
-			>
-				<Image source={Images.logo} style={[Styles.topLogo, this.state.topLogo]} />
-				<View style={Styles.form}>
-					<Form>
-						<Item stackedLabel>
-							<Label>Username</Label>
+      >
+        <IconZocial name="ninja" style={{fontSize: 160, color: 'white', alignSelf: 'center'}} />
+        <View style={Styles.bitcoin}>
+          <Card style={{flex: 0}}>
+            <CardItem>
+              <Left>
+                <Thumbnail source={Images.logo} />
+                <Body>
+                  <Text>{coindesk ? coindesk.chartName : 'Coin' }</Text>
+                  <Text note>
+                    &#36;{coindesk ? coindesk.bpi.USD.rate_float.toFixed(2) : '00.00' }&nbsp;&nbsp;
+                    &euro;{coindesk ? coindesk.bpi.EUR.rate_float.toFixed(2) : '00.00' }&nbsp;&nbsp;
+                    &pound;{coindesk ? coindesk.bpi.GBP.rate_float.toFixed(2) : '00.00' }
+                  </Text>
+                </Body>
+              </Left>
+            </CardItem>
+          </Card>
+        </View>
+        <View style={Styles.form}>
+					<Form rounded>
+            <Item stackedLabel>
+              <Label>Username</Label>
 							<Input
 								ref="username"
 								value={username}
@@ -130,13 +167,19 @@ class LoginScreen extends React.Component {
 						</Item>
 					</Form>
 					<View style={[Styles.loginRow]}>
-						<Button style={{ flex: 1, justifyContent: "center" }} full onPress={this.handlePressLogin}>
+            <Button
+              style={{ flex: 1, justifyContent: "center", marginRight: 5, borderRadius: 4 }}
+              full onPress={this.handlePressLogin}
+              dark
+            >
 							<NBText>Sign In</NBText>
-						</Button>
+            </Button>
+
 						<Button
-							style={{ flex: 1, justifyContent: "center" }}
+							style={{ flex: 1, justifyContent: "center", marginLeft: 5, borderRadius: 4 }}
 							full
-							onPress={() => this.props.navigation.goBack()}
+              onPress={() => this.props.navigation.goBack()}
+              dark
 						>
 							<NBText>Cancel</NBText>
 						</Button>
@@ -149,7 +192,8 @@ class LoginScreen extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		fetching: state.login.fetching,
+    fetching: state.login.fetching,
+    coindesk: state.coindesk.response,
 	};
 };
 

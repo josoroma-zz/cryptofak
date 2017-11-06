@@ -1,6 +1,12 @@
 import Config from '../Config/DebugConfig'
 import Immutable from 'seamless-immutable'
-import Reactotron from 'reactotron-react-native'
+import Reactotron, {
+  trackGlobalErrors,
+  openInEditor,
+  overlay,
+  asyncStorage,
+  networking
+} from 'reactotron-react-native'
 import { reactotronRedux as reduxPlugin } from 'reactotron-redux'
 import sagaPlugin from 'reactotron-redux-saga'
 
@@ -9,6 +15,11 @@ if (Config.useReactotron) {
   Reactotron
     .configure({ name: 'Ignite App' })
     .useReactNative()
+    .use(trackGlobalErrors())
+    .use(openInEditor())
+    .use(overlay())
+    .use(asyncStorage())
+    .use(networking())
     .use(reduxPlugin({ onRestore: Immutable }))
     .use(sagaPlugin())
     .connect()
